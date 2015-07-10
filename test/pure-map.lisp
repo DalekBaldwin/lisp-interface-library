@@ -16,7 +16,8 @@
   (read-only-linear-map-test i)
   (simple-linear-map-test i)
   (harder-linear-map-test i)
-  (multilinear-map-test i))
+  (multilinear-map-test i)
+  (one-element-divide/list-test i))
 
 (defmethod read-only-linear-map-test ((i lil/interface/map:<map>))
   (declare (optimize (speed 1) (debug 3) (space 3)))
@@ -264,6 +265,16 @@
     (is (<= 8 (pure::node-height m2) 15))
     (is (= 200 (size i m1)))
     (is (= 200 (size i m2)))))
+
+(defmethod one-element-divide/list-test ((i <map>))
+  (X 'one-element-divide/list)
+  (X i)
+  (let* ((one (insert i (empty i) 1 :a))
+         (divide-one (divide/list i one)))
+    (is (= (length divide-one) 1))
+    (is
+     (eql (lookup i one 1)
+          (lookup i (first divide-one) 1)))))
 
 (defparameter <denm> (<encoded-key-map>
                       :base-interface <number-map>
